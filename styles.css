@@ -1,0 +1,22 @@
+#filtersForm {
+    margin-bottom: 20px;
+}
+
+#reportData table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#reportData th, #reportData td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#reportData th {
+    background-color: #f2f2f2;
+}
+
+#downloadForm {
+    margin-top: 20px;
+}
