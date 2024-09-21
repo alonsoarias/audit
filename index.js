@@ -2,9 +2,9 @@ $(document).ready(function() {
     // Function to update the report dynamically
     function updateReport() {
         $.ajax({
-            url: M.cfg.wwwroot + '/report/audit/index.php',  // Adjust URL for report_audit
+            url: window.location.href,  // Usar URL dinámica en lugar de URL estática
             type: 'GET',
-            data: $('#filtersForm').serialize(),  // Serializes the form's elements.
+            data: $('#filtersForm').serialize(),  // Serializa los elementos del formulario.
             success: function(data) {
                 $('#reportData').html($(data).find('#reportData').html());
                 initializePagination();  // Reinitialize pagination after update
