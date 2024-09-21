@@ -1,9 +1,6 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 
-// require_once($CFG->dirroot.'/course/lib.php');
-// require_once($CFG->libdir.'/adminlib.php');
-// require_once($CFG->dirroot.'/lib/tablelib.php');
 require_once($CFG->libdir.'/excellib.class.php');
 require_once($CFG->libdir.'/odslib.class.php');
 require_once($CFG->libdir.'/csvlib.class.php');
@@ -136,6 +133,11 @@ function get_all_dates() {
 
 // Exportar datos a CSV
 function export_to_csv($header, $data, $filename) {
+    // Limpieza del buffer de salida para evitar problemas con encabezados
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
     $output = fopen('php://temp', 'r+');
     fputcsv($output, $header);
     foreach ($data as $row) {
@@ -155,8 +157,12 @@ function export_to_csv($header, $data, $filename) {
 // Exportar datos a Excel o ODS
 function export_to_spreadsheet($header, $data, $filename, $format, $title) {
     global $CFG;
-    require_once($CFG->libdir . '/excellib.class.php');
     
+    // Limpieza del buffer de salida para evitar problemas con encabezados
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
     if ($format === 'excel') {
         $workbook = new MoodleExcelWorkbook('-');
     } else {
