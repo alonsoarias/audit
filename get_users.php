@@ -1,19 +1,33 @@
 <?php
 require_once('../../config.php');
-require_once($CFG->dirroot . '/report/audit/lib.php');
 require_login();
 
-$context = context_system::instance();
-require_capability('report/audit:view', $context);
+// Captura de parámetros (modificados para report_audit)
+$usertype = optional_param('usertype', '', PARAM_TEXT);
+$userid = optional_param('userid', 0, PARAM_INT);
 
-$admins = get_all_admins();
-$dates = get_all_dates();
+$params = [];
+$sql = "SELECT DISTINCT u.id, CONCAT(u.firstname, ' ', u.lastname) AS fullname
+        FROM {user} u";
 
-$response = [
-    'admins' => array_map(function($id, $fullname) {
-        return ['id' => $id, 'fullname' => $fullname];
-    }, array_keys($admins), $admins),
-    'dates' => $dates
-];
+// Filtrar por tipo de usuario si está disponible
+if ($usertype) {
+    $sql .= " JOIN {user_info_data} d1 ON d1.userid = u.id
+              JOIN {user_info_field} f1 ON d1.fieldid = f1.id AND f1.shortname = 'user_type'
+              WHERE d1.data = :usertype";
+    $params['usertype'] = $usertype;
+}
 
-echo json_encode($response);
+// Filtrar por usuario específico (si se necesita un único usuario)
+if ($userid) {
+    $sql .= empty($usertype) ? " WHERE " : " AND ";
+    $sql .= "u.id = :userid";
+    $params['userid'] = $userid;
+}
+
+// Obtener los registros de los usuarios
+$users = $DB->get_records_sql($sql, $params);
+
+// Devolver la respuesta en formato JSON
+echo json_encode(array_values($users));
+?>
