@@ -22,3 +22,7 @@ $string['error_loading_data'] = 'Error loading users data. Please try again.';
 $string['error_updating_report'] = 'Error updating report. Please try again.';
 $string['select_date'] = 'Select date';
 $string['error_downloading'] = 'Error downloading the report. Please try again.';
+
+// Encabezados de la tabla de reportes de auditoría
+// Reutilizamos cadenas ya existentes para evitar redundancias
+$string['total_records'] = 'Total Records';
