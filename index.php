@@ -37,27 +37,29 @@ $data->tabhead = [
 ];
 $data->table = [];
 
+// Procesando registros y validando datos antes de exportar
 foreach ($records as $record) {
     $data->table[] = [
         userdate($record->time),
-        $record->fullname,
-        $record->eventname,
-        $record->component,
-        $record->action,
-        $record->target,
-        $record->objecttable,
-        $record->objectid,
-        $record->description,
-        $record->ip
+        !empty($record->fullname) ? $record->fullname : '',
+        !empty($record->eventname) ? $record->eventname : '',
+        !empty($record->component) ? $record->component : '',
+        !empty($record->action) ? $record->action : '',
+        !empty($record->target) ? $record->target : '',
+        !empty($record->objecttable) ? $record->objecttable : '',
+        !empty($record->objectid) ? $record->objectid : '',
+        !empty($record->description) ? $record->description : '',
+        !empty($record->ip) ? $record->ip : ''
     ];
 }
 
 // Exportación de datos
 if (optional_param('download', '', PARAM_TEXT)) {
     while (ob_get_level()) {
-        ob_end_clean();
+        ob_end_clean(); // Limpiar cualquier salida previa
     }
 
+    // Verificar formato de exportación y realizar la exportación
     if ($format === 'csv') {
         export_to_csv($data->tabhead, $data->table, 'audit_report');
     } else {
