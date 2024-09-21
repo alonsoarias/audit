@@ -1,10 +1,14 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/course/lib.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once($CFG->dirroot.'/lib/tablelib.php');
+// require_once($CFG->dirroot.'/course/lib.php');
+// require_once($CFG->libdir.'/adminlib.php');
+// require_once($CFG->dirroot.'/lib/tablelib.php');
+require_once($CFG->libdir.'/excellib.class.php');
+require_once($CFG->libdir.'/odslib.class.php');
+require_once($CFG->libdir.'/csvlib.class.php');
 
+// Función para obtener los registros de logs de superadministradores
 function get_superadmin_logs($params, $page = 0, $perpage = 100, $sort = 'l.timecreated DESC') {
     global $CFG, $DB;
     $conditions = [];
@@ -62,6 +66,7 @@ function get_superadmin_logs($params, $page = 0, $perpage = 100, $sort = 'l.time
     return $DB->get_records_sql($sql, $sql_params);
 }
 
+// Contador de registros para los logs de superadministradores
 function get_superadmin_logs_count($params) {
     global $CFG, $DB;
     $conditions = [];
@@ -97,6 +102,7 @@ function get_superadmin_logs_count($params) {
     return $DB->count_records_sql($sql, $sql_params);
 }
 
+// Función para obtener todos los administradores
 function get_all_admins() {
     global $CFG, $DB;
     $adminids = explode(',', $CFG->siteadmins);
@@ -108,6 +114,7 @@ function get_all_admins() {
     return $DB->get_records_sql_menu($sql, $params);
 }
 
+// Función para obtener todas las fechas de actividad de logs
 function get_all_dates() {
     global $CFG, $DB;
     $adminids = explode(',', $CFG->siteadmins);
@@ -127,6 +134,7 @@ function get_all_dates() {
     return $dates;
 }
 
+// Exportar datos a CSV
 function export_to_csv($header, $data, $filename) {
     $output = fopen('php://temp', 'r+');
     fputcsv($output, $header);
@@ -144,6 +152,7 @@ function export_to_csv($header, $data, $filename) {
     echo $csv;
 }
 
+// Exportar datos a Excel o ODS
 function export_to_spreadsheet($header, $data, $filename, $format, $title) {
     global $CFG;
     require_once($CFG->libdir . '/excellib.class.php');
